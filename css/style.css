@@ -1,0 +1,336 @@
+:root { --bg: #f3f3f1; --fg: #1b1b1d; --muted: #66666c; --line: rgba(0,0,0,0.14); --accent: #a8820f; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #0b0b0c; --fg: #e8e8ea; --muted: #8a8a92; --line: rgba(255,255,255,0.14); --accent: #d9b84a; }
+}
+:root[data-theme="dark"] { --bg: #0b0b0c; --fg: #e8e8ea; --muted: #8a8a92; --line: rgba(255,255,255,0.14); --accent: #d9b84a; }
+
+html { background: var(--bg); color: var(--fg); scroll-behavior: smooth; overflow-x: clip; }
+body { margin: 0; font-family: "Geist Mono", ui-monospace, Menlo, Consolas, monospace; overflow-x: hidden; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* The ocean sits behind everything. --veil (0 → 1, driven by scroll) blurs and dims it
+   so the text below the fold stays readable. */
+canvas {
+  /* inset 0 rather than 100vw: vw includes the scrollbar and would overflow sideways */
+  position: fixed; inset: 0; width: 100%; height: 100vh; display: block; z-index: 0;
+  filter: blur(calc(var(--veil, 0) * 9px));
+  opacity: calc(1 - var(--veil, 0) * 0.55);
+}
+
+.center {
+  position: relative; z-index: 1; min-height: 100vh; min-height: 100svh;
+  display: grid; place-content: center; text-align: center;
+  pointer-events: none; padding: 0 16px; isolation: isolate;
+}
+/* frosted halo so the koi blur as they pass behind the text */
+.center::before {
+  content: ""; position: absolute; left: 50%; top: 50%; width: min(900px, 130vw); height: min(460px, 90vh);
+  transform: translate(-50%, -50%); z-index: -1;
+  backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px);
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--bg) 55%, transparent), transparent);
+  mask-image: radial-gradient(closest-side, #000 45%, transparent);
+  -webkit-mask-image: radial-gradient(closest-side, #000 45%, transparent);
+}
+.center h1 { margin: 0; font-weight: 400; font-size: clamp(22px, 4.2vw, 44px); letter-spacing: -0.02em; }
+.center p { margin: 10px 0 0; color: var(--muted); font-size: 13px; }
+/* on narrow screens the location gets its own line instead of wrapping after a dangling "·" */
+.center .loc { white-space: nowrap; }
+@media (max-width: 560px) { .center .loc { display: block; margin-top: 2px; } .center .loc .sep { display: none; } }
+/* bio + call to action: a soft outline in the page colour keeps them crisp when a koi passes behind */
+.center .bio, .center .cta { max-width: 58ch; margin-inline: auto; text-shadow: 0 0 6px var(--bg), 0 0 14px var(--bg); }
+.center .bio { margin-top: 26px; color: var(--fg); font-size: 14px; line-height: 1.75; }
+.center .cta { margin-top: 18px; color: var(--fg); font-size: 14px; }
+.center .cta a { pointer-events: auto; color: var(--accent); white-space: nowrap; }   /* the link never breaks in two */
+/* cv / linkedin / github under the call to action, in the same bracket style as the toggles */
+.center .links { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px; margin-top: 18px; font-size: 13px; text-shadow: 0 0 6px var(--bg), 0 0 14px var(--bg); }
+.center .links a { pointer-events: auto; color: var(--muted); text-decoration: none; white-space: nowrap; }
+.center .links a:hover, .center .links a:focus-visible { color: var(--accent); }
+.scroll-hint {
+  position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%);
+  color: var(--muted); font-size: 12px; text-decoration: none; pointer-events: auto;
+  opacity: calc(1 - var(--veil, 0) * 3);
+}
+.scroll-hint:hover { color: var(--fg); }
+
+/* top-right toggles: language and theme */
+.toggles { position: fixed; top: 12px; right: 12px; z-index: 3; display: flex; gap: 4px; }
+.toggles button {
+  border: 0; padding: 4px 6px;
+  background: var(--bg);   /* solid: stays legible over text */
+  font: inherit; font-size: 12px; color: var(--muted); cursor: pointer;
+}
+.toggles button:hover { color: var(--fg); }
+.toggles .on { color: var(--fg); }
+
+/* Both languages live in the page; data-lang on <html> shows one of them. */
+html[data-lang="nl"] body [lang="en"], html[data-lang="en"] body [lang="nl"] { display: none !important; }
+
+/* socials: fixed bottom-left, same quiet chip style as the theme button */
+.socials {
+  position: fixed; left: 12px; bottom: 12px; z-index: 3;
+  display: flex; gap: 2px; padding: 2px;
+  background: var(--bg);   /* solid: text scrolls underneath on phones */
+}
+.socials a {
+  display: grid; place-items: center; width: 34px; height: 34px;
+  color: var(--muted); text-decoration: none;
+  transition: color .2s;
+}
+.socials a:hover, .socials a:focus-visible { color: var(--accent); }
+.socials svg { width: 17px; height: 17px; display: block; }
+
+/* ── content ─────────────────────────────────────────────── */
+main { position: relative; z-index: 2; max-width: 720px; margin: 0 auto; padding: 8vh 16px 96px; }
+section { padding: 56px 0 8px; }
+/* "01  about ──────": the rule fills whatever width is left and never wraps */
+h2 { display: flex; margin: 0 0 20px; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; color: var(--muted); white-space: pre; overflow: hidden; }
+h2::before { content: attr(data-n) "  "; color: var(--accent); }
+h2::after { content: " ────────────────────────────────────────────────────────────────"; flex: 1; overflow: hidden; color: var(--line); }
+p, li { font-size: 14px; line-height: 1.75; }
+main p { margin: 0 0 14px; }
+a { color: var(--fg); text-decoration-color: var(--accent); text-underline-offset: 3px; }
+a:hover { color: var(--accent); }
+
+.skills { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 6px 24px; }
+.skills li::before { content: "▸ "; color: var(--accent); }
+
+/* Project cards: 3 columns on wide screens, 2 on medium, 1 on phones.
+   The grid breaks out of the narrow text column so each card has room for its media. */
+.cards {
+  display: grid; grid-template-columns: 1fr; gap: 20px;
+  width: min(1120px, calc(100vw - 32px));
+  position: relative; left: 50%; translate: -50%;
+}
+@media (min-width: 640px) { .cards { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 980px) { .cards { grid-template-columns: repeat(3, 1fr); } }
+
+.card {
+  display: flex; flex-direction: column; gap: 12px; padding: 16px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+}
+.card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.card h3 { margin: 0; font-size: 15px; font-weight: 600; }
+.badge { flex: none; font-size: 11px; line-height: 1; padding: 4px 7px; border: 1px solid var(--accent); color: var(--accent); white-space: nowrap; }
+
+/* Media: same box for screenshots and videos. Screenshots are shown whole (contain);
+   add class "fill" to an img or video that should cover the box instead. */
+.media { margin: 0; aspect-ratio: 1;   /* square: room for app screens and the widget demo at a readable size */ overflow: hidden; border: 1px solid var(--line); background: color-mix(in srgb, var(--fg) 6%, var(--bg)); }
+.media img, .media video { display: block; width: 100%; height: 100%; object-fit: contain; }
+.media .fill { object-fit: cover; object-position: top; }
+
+.card .tagline { margin: 0; font-size: 13px; color: var(--muted); }
+.card p { margin: 0; font-size: 13px; line-height: 1.7; }
+.card .tags { margin-top: auto; padding-top: 4px; }   /* tags sit at the bottom, aligned across cards */
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.tags li { font-size: 11px; line-height: 1; padding: 5px 7px; border: 1px solid var(--line); color: var(--muted); }
+
+/* ── project detail view (js/detail.js) ──────────────────────
+   A card's demo opens large in a dialog, beside the card's text. detail.js wraps each demo in
+   .media-wrap with a "[ details ]" button over its corner, and moves the demo into the dialog. */
+.media-wrap { position: relative; }
+.media-wrap .media { cursor: zoom-in; }
+.detail-open {
+  position: absolute; left: 8px; bottom: 8px;   /* bottom-right is the chatbot's launcher button */
+  border: 1px solid var(--line); padding: 4px 7px; cursor: pointer;
+  background: var(--bg); color: var(--muted); font: inherit; font-size: 11px;
+}
+.detail-open:hover, .detail-open:focus-visible { color: var(--accent); border-color: var(--accent); }
+
+html:has(dialog.detail[open]) { overflow: hidden; }   /* the page doesn't scroll behind it */
+.detail {
+  width: min(980px, calc(100vw - 32px)); max-width: none; max-height: calc(100dvh - 32px);
+  padding: 0; border: 1px solid var(--line); color: var(--fg); background: var(--bg);
+  font: inherit;
+}
+.detail::backdrop { background: rgba(0, 0, 0, .6); backdrop-filter: blur(4px); }
+.detail[open] { animation: detail-in .2s ease; }
+@keyframes detail-in { from { opacity: 0; transform: translateY(8px); } }
+.detail-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+.detail-head h3 { margin: 0; font-size: 16px; font-weight: 600; }
+.detail-close { border: 0; padding: 4px 6px; background: none; color: var(--muted); font: inherit; font-size: 12px; cursor: pointer; }
+.detail-close:hover, .detail-close:focus-visible { color: var(--fg); }
+.detail-body { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 22px; padding: 18px; }
+/* the demo: as big as fits next to the text and inside the window */
+.detail-media .media { width: min(100%, calc(100dvh - 140px)); cursor: auto; }
+.detail-text { display: flex; flex-direction: column; gap: 12px; align-self: start; }
+.detail-text .badge { align-self: flex-start; }
+.detail-text .tagline { margin: 0; font-size: 13px; color: var(--muted); }
+.detail-text p { margin: 0; font-size: 14px; line-height: 1.75; }
+.detail-text .more { display: flex; flex-direction: column; gap: 12px; padding-top: 14px; border-top: 1px solid var(--line); }
+
+/* phones: full screen, demo on top, text underneath */
+@media (max-width: 719px) {
+  .detail { width: 100vw; max-height: 100dvh; height: 100dvh; border: 0; }
+  .detail-body { grid-template-columns: 1fr; padding: 14px; }
+  .detail-media .media { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { .detail[open] { animation: none; } }
+
+.contact { list-style: none; margin: 0; padding: 0; }
+.contact span { display: inline-block; width: 9ch; color: var(--muted); }
+footer { margin-top: 72px; font-size: 12px; color: var(--muted); }
+
+/* ── chatbot widget demo (js/widget-demo.js) ────────────────────
+   Rebuilt at the screenshots' own size (525×530) with positions measured from them,
+   then scaled by --k to fit the card. The widget keeps its own light look in both themes. */
+.media:has(.wd) { position: relative; }
+.wd {
+  /* The visible content (panel + launcher) spans x 12–512, y 12–526 of the 525×530 design;
+     centre that region, not the whole design, so no empty margin is wasted. */
+  position: absolute; left: 50%; top: 50%; width: 525px; height: 530px;
+  transform: scale(var(--k, .4)) translate(-262px, -269px);
+  transform-origin: 0 0;
+  font-family: Arial, Helvetica, sans-serif; color: #111; letter-spacing: 0;
+  -webkit-user-select: none; user-select: none;   /* it's a picture of the widget, not text to copy */
+}
+.wd, .wd * { box-sizing: border-box; }   /* sizes below are measured outer sizes */
+.wd-panel {
+  position: absolute; left: 12px; top: 12px; width: 500px; height: 438px; overflow: hidden;
+  background: #f7f7f7; border: 1px solid #d4d4d4; border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.18);
+  transform-origin: 92% 105%;   /* grows out of the launcher button */
+  opacity: 0; transform: scale(.9) translateY(14px);
+  transition: opacity .3s ease, transform .35s ease;
+}
+.wd.open .wd-panel { opacity: 1; transform: none; }
+.wd-head {
+  height: 46px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px 0 22px;
+  background: #f1f1f1; border-bottom: 1px solid #e3e3e3;
+}
+.wd-enlarge { font-size: 17px; font-weight: 600; color: #222; }
+.wd-enlarge::before { content: ""; display: inline-block; width: 12px; height: 9px; margin-right: 8px; border: 2px solid #333; border-top-width: 4px; vertical-align: -1px; }
+.wd-by { font-size: 13px; color: #777; }
+.wd-by b { color: #555; }
+
+/* two views inside the panel, switched by data-view */
+.wd-faq, .wd-chat { position: absolute; inset: 46px 0 0; display: none; }
+.wd[data-view="faq"] .wd-faq, .wd[data-view="chat"] .wd-chat { display: block; }
+
+.wd-search { position: absolute; left: 12px; right: 12px; top: 12px; height: 36px; padding: 0 12px; line-height: 34px; font-size: 16px; color: #888; background: #fff; border: 1px solid #cfcfcf; border-radius: 6px; }
+.wd-faq-title { position: absolute; left: 12px; top: 81px; font-size: 19px; font-weight: 700; color: #000; }
+.wd-q { position: absolute; left: 32px; font-size: 17px; color: #222; }
+.wd-ask {
+  position: absolute; left: 12px; right: 12px; top: 292px; height: 50px; display: grid; place-items: center;
+  font-size: 20px; color: #b98d6a; background: #fff; border: 1px solid #c9a283; border-radius: 9px; transition: background .15s;
+}
+.wd.press-ask .wd-ask { background: #f3e6dc; }
+
+.wd-log {
+  position: absolute; left: 16px; right: 16px; top: 10px; height: 234px; overflow: hidden;
+  padding: 12px 24px 12px 10px; background: #fff; border: 1px solid #dcdcdc; border-radius: 6px;
+}
+.wd-log::after { content: ""; position: absolute; right: 5px; top: 18px; width: 8px; height: 70px; border-radius: 4px; background: #8c8c8c; }
+.wd-msg { width: fit-content; max-width: 85%; margin-bottom: 10px; padding: 7px 13px; border-radius: 12px; font-size: 19.5px; line-height: 1.22; white-space: pre-line; animation: wd-pop .3s ease both; }
+.wd-user { margin-left: auto; background: #e3925f; color: #fff; }
+.wd-bot { background: #e6e6ea; color: #111; }
+@keyframes wd-pop { from { opacity: 0; transform: translateY(6px); } }
+
+.wd-input {
+  position: absolute; left: 28px; right: 28px; top: 272px; height: 46px; display: flex; align-items: center; gap: 2px;
+  padding: 0 14px 0 16px; font-size: 17px; color: #222; background: #fff; border: 1.5px solid #e9a684; border-radius: 23px;
+}
+.wd-typed:not(:empty) + .wd-ph { display: none; }
+.wd-ph { color: #8a8a8a; }
+.wd.typing .wd-typed::after { content: ""; display: inline-block; width: 1.5px; height: 18px; margin-left: 1px; vertical-align: -3px; background: #222; animation: wd-caret 1s steps(1) infinite; }
+@keyframes wd-caret { 50% { opacity: 0; } }
+.wd-input svg { width: 24px; height: 24px; margin-left: auto; flex: none; }
+.wd-back { position: absolute; left: 0; right: 0; top: 342px; text-align: center; font-size: 17px; color: #1a73e8; }
+
+/* the round launcher button is cut straight from the screenshot, so it is the real one */
+.wd-launcher {
+  position: absolute; left: 452px; top: 464px; width: 62px; height: 62px; border-radius: 50%;
+  background: url(../images/widget3.png) -452px -464px / 525px 530px no-repeat;
+  transition: transform .15s ease;
+}
+.wd.press-launcher .wd-launcher { transform: scale(.88); }
+
+/* ASCII drawing used as a card's media (the planned ESP32 project) */
+/* Centre the drawing from the outside: making the <pre> itself a grid would turn the
+   coloured <span> inside it into a separate grid item and break the lines. */
+.media:has(.ascii-art) { display: grid; place-content: center; }
+.media .ascii-art { margin: 0; font-size: 11px; line-height: 1.3; color: var(--muted); white-space: pre; }
+.ascii-art .led { color: var(--accent); }
+
+/* Theme switch: for a moment (ui.js adds .theme-fade), every colour eases to the new theme
+   instead of jumping. Only during the switch, so hover effects stay snappy the rest of the time.
+   The pond's snapshot (.ocean-snap, see ocean.js) runs its own fade, so it's left out here. */
+html.theme-fade, html.theme-fade *:not(.ocean-snap), html.theme-fade *::before, html.theme-fade *::after {
+  transition: background-color .18s ease, color .18s ease, border-color .18s ease,
+              fill .18s ease, stroke .18s ease, text-shadow .18s ease !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  html.theme-fade, html.theme-fade *, html.theme-fade *::before, html.theme-fade *::after { transition: none !important; }
+}
+
+/* ── experience & education timeline ─────────────────────────
+   Desktop: experience left of the line, education right, newest first.
+   Each item is its own row, so items never share a row even when they're on opposite sides. */
+.timeline { border: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 82%, transparent); }
+.tl-head { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--line); }
+.tl-head > span { padding: 10px 16px; text-align: center; font-size: 12px; color: var(--muted); letter-spacing: 0.06em; }
+.tl-head > span:first-child { border-right: 1px solid var(--line); }
+
+.tl { position: relative; list-style: none; margin: 0; padding: 24px 0 28px; display: flex; flex-direction: column; gap: 26px; }
+.tl::before {   /* the line down the middle, continuing the header's divider */
+  content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; transform: translateX(-0.5px);
+  background: var(--line);
+}
+.tl-item { display: grid; grid-template-columns: 1fr 28px 1fr; align-items: start; }
+.tl-item::before {   /* the dot: outlined = finished, filled (.now) = ongoing */
+  content: ""; grid-column: 2; grid-row: 1; justify-self: center; position: relative; z-index: 1;
+  width: 11px; height: 11px; margin-top: 3px; border-radius: 50%;
+  border: 2px solid var(--accent); background: var(--bg); box-sizing: border-box;
+}
+.tl-item.now::before { background: var(--accent); }
+.tl-body { grid-row: 1; grid-column: 3; padding: 0 16px 0 6px; }
+.tl-item.exp .tl-body { grid-column: 1; text-align: right; padding: 0 6px 0 16px; }
+
+.tl-body p, .tl-body h3 { margin: 0; }
+.tl-kind { display: none; font-size: 11px; color: var(--accent); }
+.tl-date { font-size: 11px; color: var(--muted); }
+.tl-body h3 { margin-top: 3px; font-size: 14px; font-weight: 600; line-height: 1.4; }
+.tl-place { font-size: 12px; color: var(--muted); }
+.tl-desc { margin-top: 6px !important; font-size: 13px; line-height: 1.6; }
+
+/* Phones: one column, the line on the left, a small label says which kind each item is. */
+@media (max-width: 639px) {
+  .tl-head { display: none; }
+  .tl::before { left: 14px; }
+  .tl-item { grid-template-columns: 28px 1fr; }
+  .tl-item::before { grid-column: 1; }
+  .tl-body, .tl-item.exp .tl-body { grid-column: 2; text-align: left; padding: 0 16px 0 6px; }
+  .tl-kind { display: block; }
+}
+
+/* ── garage-app demo (js/garage-demo.js plays the two clips in turn) ──
+   The phone recording plays in a phone frame, then .pc swaps it for a browser window playing
+   the PC recording (cut to a camera that follows the form's scroll). Without motion, the phone
+   still is shown. */
+.gd { position: relative; }
+.gd-phone, .gd-window { transition: opacity .4s ease, transform .4s ease; }
+.gd-phone {
+  /* shaped like the recording (384 × 852) so the whole screen fits without cropping */
+  position: absolute; left: 50%; top: 3%; height: 94%; aspect-ratio: 400 / 868; transform: translateX(-50%);
+  padding: 6px; box-sizing: border-box; border-radius: 22px;
+  background: #1a1b1e; border: 1px solid var(--line);
+}
+.gd-screen { width: 100%; height: 100%; overflow: hidden; border-radius: 16px; background: #101316; }
+.gd .gd-ph, .gd .gd-pc { object-fit: cover; object-position: top; }
+
+.gd-window {
+  position: absolute; left: 3%; top: 7%; width: 94%; height: 86%; overflow: hidden;
+  border-radius: 8px; border: 1px solid var(--line); background: #0f1114;
+  opacity: 0; transform: translateY(8px);
+}
+.gd-bar { height: 18px; display: flex; align-items: center; gap: 5px; padding: 0 8px; background: #1b1d21; }
+.gd-bar i { width: 7px; height: 7px; border-radius: 50%; background: #3a3d42; }
+.gd-view { position: absolute; top: 18px; left: 0; right: 0; bottom: 0; overflow: hidden; background: #0b0d0f; }
+
+.gd.pc .gd-phone { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+.gd.pc .gd-window { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .gd-phone, .gd-window { transition: none; }
+  .gd-window { display: none; }
+}

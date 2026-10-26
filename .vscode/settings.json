@@ -1,0 +1,6 @@
+{
+  // Live Server: listen on the local network too, so the site opens on a phone on the same Wi-Fi
+  // (http://<this PC's IP>:5500). When Windows asks, allow it for private networks only.
+  "liveServer.settings.host": "0.0.0.0",
+  "liveServer.settings.port": 5500
+}

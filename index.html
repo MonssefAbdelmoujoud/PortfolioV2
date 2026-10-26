@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Monssef Abdelmoujoud · Junior developer</title>
+<meta name="description" content="Junior developer and Bachelor student MCT in Kortrijk. My projects, experience and CV." />
+<link rel="icon" href="images/favicon.svg" type="image/svg+xml" />
+<!-- link previews (LinkedIn, messaging apps): these need full URLs, so they only work once the site is live on monssef.eu -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://monssef.eu/" />
+<meta property="og:title" content="Monssef Abdelmoujoud · Junior developer" />
+<meta property="og:description" content="Junior developer and Bachelor student MCT in Kortrijk. My projects, experience and CV." />
+<meta property="og:image" content="https://monssef.eu/images/og.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Monssef Abdelmoujoud, junior developer, over an ASCII koi pond" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+<script>
+  // Runs before the page is drawn, so there's no flash of the wrong language or theme.
+  // Kept inline on purpose: a separate file here would delay the first paint.
+  (() => {
+    const root = document.documentElement;
+    let lang = null, theme = null;
+    try { lang = localStorage.getItem("lang"); theme = localStorage.getItem("theme"); } catch {}
+    // A saved choice wins; otherwise the first of the browser's languages that's Dutch or English
+    // (a French-speaking Belgian with Dutch second gets Dutch). Anything else → English.
+    if (lang !== "en" && lang !== "nl") {
+      const pick = (navigator.languages || [navigator.language || ""]).map(l => l.slice(0, 2).toLowerCase()).find(l => l === "nl" || l === "en");
+      lang = pick || "en";
+    }
+    root.dataset.lang = root.lang = lang;
+    if (theme === "dark" || theme === "light") root.dataset.theme = theme;
+  })();
+</script>
+<script src="js/ui.js" defer></script>
+<script src="js/ocean.js" defer></script>
+<script src="js/widget-demo.js" defer></script>
+<script src="js/garage-demo.js" defer></script>
+<script src="js/detail.js" defer></script>
+</head>
+<body>
+<canvas id="ocean" aria-hidden="true"></canvas>
+<header class="center">
+  <h1>Monssef Abdelmoujoud</h1>
+  <p><span lang="en">Junior developer · Bachelor student @ MCT</span><span lang="nl">Junior developer · Bachelor student @ MCT</span><span class="loc"><span class="sep"> · </span>Kortrijk, BE</span></p>
+  <p class="bio" lang="en">I like working across the whole stack, from the screen people click on to the database behind it. I know I still have a lot to learn, and I learn best by building.</p>
+  <p class="bio" lang="nl">Ik werk graag over de hele stack, van het scherm waarop mensen klikken tot de database erachter. Ik weet dat ik nog veel te leren heb, en ik leer het best door te bouwen.</p>
+  <p class="cta" lang="en">Looking for an intern for early 2028? <a class="mail" href="#contact" data-u="abd.monssef" data-d="gmail.com">Let's talk.</a></p>
+  <p class="cta" lang="nl">Op zoek naar een stagiair voor begin 2028? <a class="mail" href="#contact" data-u="abd.monssef" data-d="gmail.com">Laat iets weten.</a></p>
+  <!-- the same links as the corner icons, but where everyone looks first -->
+  <p class="links">
+    <a lang="en" href="CV_Monssef_Abdelmoujoud_EN.pdf" target="_blank" rel="noopener">[ cv ]</a>
+    <a lang="nl" href="CV_Monssef_Abdelmoujoud_NL.pdf" target="_blank" rel="noopener">[ cv ]</a>
+    <a href="https://www.linkedin.com/in/monssef-abdelmoujoud-312694261/" target="_blank" rel="noopener">[ linkedin ]</a>
+    <a href="https://github.com/MonssefAbdelmoujoud" target="_blank" rel="noopener">[ github ]</a>
+  </p>
+  <a class="scroll-hint" href="#projects">scroll ↓</a>
+</header>
+<div class="toggles">
+  <button id="lang" type="button" aria-label="Switch language / Taal wijzigen">[ <span data-l="en">en</span> · <span data-l="nl">nl</span> ]</button>
+  <button id="theme" type="button"><span lang="en">[ theme ]</span><span lang="nl">[ thema ]</span></button>
+</div>
+
+<nav class="socials" aria-label="Links">
+  <a href="https://www.linkedin.com/in/monssef-abdelmoujoud-312694261/" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+  </a>
+  <a href="https://github.com/MonssefAbdelmoujoud" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+    <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38l-.01-1.49c-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48l-.01 2.2c0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+  </a>
+  <!-- One CV per language, opened in a new tab; the language switch hides the other link.
+       These are the public versions (no phone number, photo or reference details):
+       Documents\CV\cv-en-public.pdf and cv-nl-public.pdf, renamed to the names below. -->
+  <a lang="en" href="CV_Monssef_Abdelmoujoud_EN.pdf" target="_blank" rel="noopener" aria-label="CV (PDF, opens in a new tab)" title="CV (PDF)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>
+  </a>
+  <a lang="nl" href="CV_Monssef_Abdelmoujoud_NL.pdf" target="_blank" rel="noopener" aria-label="Cv (pdf, opent in een nieuw tabblad)" title="Cv (pdf)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>
+  </a>
+</nav>
+
+<main>
+  <section id="projects">
+    <h2 data-n="01"><span lang="en">projects</span><span lang="nl">projecten</span></h2>
+
+    <!--
+      Each project is a card: head (name + badge), media, tagline, description, tags.
+      To show a short video instead of a screenshot, replace the <img> with:
+        <video class="fill" muted loop playsinline preload="none" poster="images/NAME.jpg">
+          <source src="media/NAME.mp4" type="video/mp4">
+        </video>
+      Keep clips short (5–15 s), without sound and small (under ~3 MB). ui.js plays a video
+      only while it's on screen, and never autoplays for visitors who prefer reduced motion.
+
+      Cards with a demo get a "[ details ]" button (js/detail.js) that opens the demo large next
+      to the card's text. For a longer write-up that only shows there, add after the tags:
+        <div class="more" hidden>
+          <p lang="en">…</p>
+          <p lang="nl">…</p>
+        </div>
+    -->
+    <div class="cards">
+    <article class="card">
+      <header class="card-head">
+        <h3>faq-chatbot</h3>
+        <span class="badge"><span lang="en">internship</span><span lang="nl">stage</span></span>
+      </header>
+      <!-- Animated walk-through of the widget, rebuilt from its screenshots (js/widget-demo.js).
+           Without JS or with reduced motion it simply shows the final chat, like images/widget3.png. -->
+      <figure class="media" role="img" aria-label="The chatbot widget opens, the visitor asks the AI a question and gets an answer" data-alt-nl="De chatbotwidget opent, de bezoeker stelt de AI een vraag en krijgt een antwoord">
+        <div class="wd open" data-view="chat" aria-hidden="true">
+          <div class="wd-panel">
+            <div class="wd-head"><span class="wd-enlarge">Enlarge</span><span class="wd-by">Powered by <b>Flagstone</b></span></div>
+            <div class="wd-faq">
+              <div class="wd-search">Search...</div>
+              <div class="wd-faq-title">Frequently Asked Questions:</div>
+              <div class="wd-q" style="top:138px">How many products do I have?</div>
+              <div class="wd-q" style="top:188px">What roles are there in Flagstone?</div>
+              <div class="wd-q" style="top:239px">How many machines are currently inactive?</div>
+              <div class="wd-ask">Ask AI</div>
+            </div>
+            <div class="wd-chat">
+              <div class="wd-log">
+                <div class="wd-msg wd-user">Explain to me shortly how to expand my business.</div>
+                <div class="wd-msg wd-bot">To expand your business, consider the following strategies:
+
+1. Market Research: Identify new markets or demographics.
+2. Diversification: Introduce new products or services.</div>
+              </div>
+              <div class="wd-input"><span class="wd-typed"></span><span class="wd-ph">Type your message...</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="2" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></div>
+              <div class="wd-back">Back to FAQ</div>
+            </div>
+          </div>
+          <div class="wd-launcher"></div>
+        </div>
+      </figure>
+      <p class="tagline"><span lang="en">AI-powered FAQ widget · Flagstone</span><span lang="nl">AI-gestuurde FAQ-widget · Flagstone</span></p>
+      <p lang="en">A floating widget where visitors search frequently asked questions or ask an AI assistant. Plain JavaScript front end; an ASP.NET Core Web API serves the FAQ data from SQL Server and forwards questions to the OpenAI API.</p>
+      <p lang="nl">Een zwevende widget waarin bezoekers veelgestelde vragen doorzoeken of een AI-assistent iets vragen. Front-end in pure JavaScript; een ASP.NET Core Web API haalt de FAQ-data uit SQL Server en stuurt vragen door naar de OpenAI API.</p>
+      <ul class="tags"><li>JavaScript</li><li>ASP.NET Core</li><li>EF Core</li><li>SQL Server</li><li>OpenAI API</li></ul>
+      <div class="more" hidden>
+        <p lang="en">Flagstone wanted a way to bring AI into its services. My mentor gave me the assignment: a widget that's easy to install and cuts the time people need to find important information and analysis, by letting the AI do that work.</p>
+        <p lang="en">To make it easy to install, I published it as an npm package. The AI is connected to the company's database: when a user asks a question, it writes the query itself, looks up the data it needs and answers with that. Its database access is read-only, so it can look things up but never change or delete anything.</p>
+        <p lang="nl">Flagstone wilde AI in zijn diensten brengen. Mijn mentor gaf me de opdracht: een widget die makkelijk te installeren is en de tijd verkort die mensen nodig hebben om belangrijke informatie en analyses te vinden, door de AI dat werk te laten doen.</p>
+        <p lang="nl">Om het installeren makkelijk te maken, bracht ik hem uit als npm-pakket. De AI is gekoppeld aan de database van het bedrijf: als een gebruiker een vraag stelt, schrijft hij zelf de query, zoekt hij de nodige gegevens op en antwoordt daarmee. Zijn toegang tot de database is alleen-lezen, dus hij kan gegevens opzoeken maar nooit iets wijzigen of verwijderen.</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <header class="card-head">
+        <h3>garage-app</h3>
+        <span class="badge"><span lang="en">in use · v2</span><span lang="nl">in gebruik · v2</span></span>
+      </header>
+      <!-- Two real v2 screen recordings played one after the other (css .gd-*, js/garage-demo.js):
+           the phone form with test data, then the PC form and its photo section. Browser chrome
+           is cropped out, the background blurred and the plate pixelated in the files themselves.
+           Reduced motion shows the phone still. -->
+      <figure class="media gd" role="img" aria-label="The Android app: a car being entered on the phone, then the same kind of record with a photo in the PC interface" data-alt-nl="De Android-app: een auto wordt ingevoerd op de gsm, daarna een fiche met foto in de pc-interface">
+        <div class="gd-phone" aria-hidden="true">
+          <div class="gd-screen">
+            <video class="gd-ph" src="images/garage/phone.mp4" poster="images/garage/phone-poster.jpg" width="384" height="852" muted playsinline preload="metadata"></video>
+          </div>
+        </div>
+        <div class="gd-window" aria-hidden="true">
+          <div class="gd-bar"><i></i><i></i><i></i></div>
+          <div class="gd-view">
+            <video class="gd-pc" src="images/garage/pc.mp4" poster="images/garage/pc-poster.jpg" width="480" height="420" muted playsinline preload="metadata"></video>
+          </div>
+        </div>
+      </figure>
+      <p class="tagline"><span lang="en">Phone and PC app for my dad's garage</span><span lang="nl">App voor gsm en pc voor de garage van mijn vader</span></p>
+      <p lang="en">Collects everything the garage needs to invoice a car: details, photos and voice memos, on the phone or the PC. The Android app works fully offline and syncs in the background without duplicating data; a .NET 10 API with PostgreSQL runs in Docker on my home server.</p>
+      <p lang="nl">Verzamelt alles wat de garage nodig heeft om een auto te factureren: gegevens, foto's en spraakmemo's, op gsm of pc. De Android-app werkt volledig offline en synchroniseert op de achtergrond zonder dubbele data; een .NET 10-API met PostgreSQL draait in Docker op mijn thuisserver.</p>
+      <ul class="tags"><li>Kotlin</li><li>Android</li><li>.NET 10</li><li>PostgreSQL</li><li>Docker</li></ul>
+      <div class="more" hidden>
+        <p lang="en">At my dad's garage I'm the one who makes the invoices. For every car I need a set of details: mileage, brand, model and so on. My dad used to take photos on his phone and send them to me, but that kept causing confusion and miscommunication.</p>
+        <p lang="en">My first version worked completely offline, so everything stayed on my dad's phone: to make an invoice, I still had to wait until he came by and handed it to me. So I bought an office desktop and turned it into a home server running Ubuntu Server, with a database and Tailscale for secure access.</p>
+        <p lang="en">Now my dad enters a car in the app, it goes to the database, and I pick it up on my PC or phone when I make the invoice, without him having to be around.</p>
+        <p lang="nl">In de garage van mijn vader maak ik de facturen. Per auto heb ik een reeks gegevens nodig: kilometerstand, merk, model enzovoort. Mijn vader nam vroeger foto's met zijn gsm en stuurde die door, maar dat zorgde telkens voor verwarring en misverstanden.</p>
+        <p lang="nl">Mijn eerste versie werkte volledig offline, dus alles bleef op de gsm van mijn vader staan: om een factuur te maken, moest ik nog altijd wachten tot hij langskwam en me zijn gsm gaf. Dus kocht ik een kantoorcomputer en maakte er een thuisserver van met Ubuntu Server, een database en Tailscale voor veilige toegang.</p>
+        <p lang="nl">Nu voert mijn vader een auto in via de app, alles komt in de database terecht en ik haal het op mijn pc of gsm op als ik de factuur maak, zonder dat hij erbij moet zijn.</p>
+      </div>
+    </article>
+
+    <!-- Planned project (first version Q1 2027): swap the ASCII board for a demo once it works. -->
+    <article class="card">
+      <header class="card-head">
+        <h3>smart-home</h3>
+        <span class="badge"><span lang="en">planned · Q1 2027</span><span lang="nl">gepland · Q1 2027</span></span>
+      </header>
+      <figure class="media" role="img" aria-label="ASCII drawing of an ESP32 board" data-alt-nl="ASCII-tekening van een ESP32-bordje">
+<pre class="ascii-art" aria-hidden="true">  o o o o o o o o o o o o o o o
+ +-------------------------------+
+ | +-----------------+  /\/\/\/\ |
+ | |                 |  \/\/\/\/ |
+ | |  ESP32-WROOM-32 |  antenna  |
+ | |                 |           |
+ | +-----------------+           |
+ |                               |
+ |  [EN]        <span class="led">(*)</span>      [BOOT]  |
+ |            +-----+            |
+ +------------| USB |------------+
+              +-----+
+  o o o o o o o o o o o o o o o</pre>
+      </figure>
+      <p class="tagline"><span lang="en">My own smart home, controlled by voice</span><span lang="nl">Mijn eigen slimme huis, met spraakbediening</span></p>
+      <p lang="en">Like Alexa, but my own and fully local, so my voice never leaves the house. ESP32 boards with sensors and switches talk to a Python back end on my home server, which turns spoken commands into actions. Also my way of learning Python properly.</p>
+      <p lang="nl">Zoals Alexa, maar van mezelf en volledig lokaal, dus mijn stem verlaat het huis nooit. ESP32-bordjes met sensoren en schakelaars praten met een Python-back-end op mijn thuisserver, die gesproken commando's omzet in acties. Meteen ook mijn manier om Python echt te leren.</p>
+      <ul class="tags"><li>ESP32</li><li>Python</li><li>IoT</li></ul>
+    </article>
+    </div>
+  </section>
+
+  <section id="journey">
+    <h2 data-n="02"><span lang="en">experience &amp; education</span><span lang="nl">ervaring &amp; opleiding</span></h2>
+    <!-- One timeline, newest first: experience on the left of the line, education on the right.
+         A filled dot (.now) means ongoing. On phones it becomes one column with a label per item. -->
+    <div class="timeline">
+      <div class="tl-head" aria-hidden="true">
+        <span><span lang="en">experience</span><span lang="nl">ervaring</span></span>
+        <span><span lang="en">education</span><span lang="nl">opleiding</span></span>
+      </div>
+      <ol class="tl">
+        <li class="tl-item edu now">
+          <div class="tl-body">
+            <p class="tl-kind"><span lang="en">education</span><span lang="nl">opleiding</span></p>
+            <p class="tl-date"><span lang="en">2026 – now</span><span lang="nl">2026 – heden</span></p>
+            <h3>Bachelor Multimedia &amp; Creative Technology</h3>
+            <p class="tl-place">Howest · Kortrijk</p>
+            <p class="tl-desc" lang="en">A broad IT bachelor with a lot of AI, heading for the Next Web Developer track: full-stack web development for apps that use AI to understand what the user wants. Along the way I work with Azure, Figma for UX/UI design and IoT sensors.</p>
+            <p class="tl-desc" lang="nl">Een brede IT-bachelor met veel aandacht voor AI, op weg naar de richting Next Web Developer: full-stack webontwikkeling voor apps die met AI begrijpen wat de gebruiker wil. Onderweg werk ik met Azure, Figma voor UX/UI-design en IoT-sensoren.</p>
+          </div>
+        </li>
+        <li class="tl-item exp">
+          <div class="tl-body">
+            <p class="tl-kind"><span lang="en">experience</span><span lang="nl">ervaring</span></p>
+            <p class="tl-date"><span lang="en">Sep 2025 – Aug 2026</span><span lang="nl">sep 2025 – aug 2026</span></p>
+            <h3><span lang="en">Odoo Developer</span><span lang="nl">Odoo-developer</span></h3>
+            <p class="tl-place">Leftech BV</p>
+            <p class="tl-desc" lang="en">Took a local family business with no IT at all online: set up Odoo for their entire stock and their website, as a stable environment to run the business on.</p>
+            <p class="tl-desc" lang="nl">Bracht een lokaal familiebedrijf zonder enige IT online: zette Odoo op voor hun volledige stock en hun website, als stabiele omgeving om het bedrijf op te draaien.</p>
+          </div>
+        </li>
+        <li class="tl-item exp">
+          <div class="tl-body">
+            <p class="tl-kind"><span lang="en">experience</span><span lang="nl">ervaring</span></p>
+            <p class="tl-date"><span lang="en">Sep 2024 – Jun 2025</span><span lang="nl">sep 2024 – jun 2025</span></p>
+            <h3><span lang="en">.NET developer intern</span><span lang="nl">.NET-developer (stage)</span></h3>
+            <p class="tl-place">Flagstone</p>
+            <p class="tl-desc" lang="en">Built an AI-powered FAQ chatbot widget, from the JavaScript front end to the .NET API and database.</p>
+            <p class="tl-desc" lang="nl">Bouwde een AI-gestuurde FAQ-chatbotwidget, van de JavaScript-frontend tot de .NET-API en database.</p>
+          </div>
+        </li>
+        <li class="tl-item edu">
+          <div class="tl-body">
+            <p class="tl-kind"><span lang="en">education</span><span lang="nl">opleiding</span></p>
+            <p class="tl-date">2022 – 2025</p>
+            <h3><span lang="en">Associate degree in Programming</span><span lang="nl">Graduaat Programmeren</span></h3>
+            <p class="tl-place">VIVES · Kortrijk</p>
+            <p class="tl-desc" lang="en">A hands-on programming degree built around C# and .NET: full-stack web development, APIs, databases and a first step into mobile apps. A big part of it is learning on the job, which for me was my internship at Flagstone.</p>
+            <p class="tl-desc" lang="nl">Een praktijkgerichte programmeeropleiding rond C# en .NET: full-stack webontwikkeling, API's, databases en een eerste stap in mobiele apps. Een groot deel is werkplekleren, voor mij de stage bij Flagstone.</p>
+          </div>
+        </li>
+        <li class="tl-item exp now">
+          <div class="tl-body">
+            <p class="tl-kind"><span lang="en">experience</span><span lang="nl">ervaring</span></p>
+            <p class="tl-date"><span lang="en">2019 – now</span><span lang="nl">2019 – heden</span></p>
+            <h3><span lang="en">Administrative lead</span><span lang="nl">Administratief verantwoordelijke</span></h3>
+            <p class="tl-place">AM Garage</p>
+            <p class="tl-desc" lang="en">Invoicing, administration, planning and customer contact for my dad's garage, alongside my studies. That's where the idea for the garage app came from.</p>
+            <p class="tl-desc" lang="nl">Facturatie, administratie, planning en klantencontact voor de garage van mijn vader, naast mijn studies. Daar ontstond het idee voor de garage-app.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="skills">
+    <h2 data-n="03"><span lang="en">skills</span><span lang="nl">vaardigheden</span></h2>
+    <ul class="skills">
+      <li>C# / .NET / ASP.NET Core &amp; MVC</li>
+      <li>Python / Odoo</li>
+      <li>SQL Server / PostgreSQL / EF Core</li>
+      <li>Kotlin / Jetpack Compose</li>
+      <li>Docker / Linux (Ubuntu server)</li>
+      <li>HTML / CSS / JavaScript</li>
+    </ul>
+  </section>
+
+  <section id="contact">
+    <h2 data-n="04">contact</h2>
+    <ul class="contact">
+      <li><span>email</span><a class="mail" href="#contact" data-u="abd.monssef" data-d="gmail.com">abd.monssef [at] gmail [dot] com</a></li>
+      <li><span>linkedin</span><a href="https://www.linkedin.com/in/monssef-abdelmoujoud-312694261/" target="_blank" rel="noopener">monssef-abdelmoujoud</a></li>
+      <li><span>github</span><a href="https://github.com/MonssefAbdelmoujoud" target="_blank" rel="noopener">MonssefAbdelmoujoud</a></li>
+      <li><span>cv</span><a lang="en" href="CV_Monssef_Abdelmoujoud_EN.pdf" target="_blank" rel="noopener">pdf, English</a><a lang="nl" href="CV_Monssef_Abdelmoujoud_NL.pdf" target="_blank" rel="noopener">pdf, Nederlands</a></li>
+    </ul>
+    <footer>© Monssef Abdelmoujoud · <span lang="en">koi drawn in ascii</span><span lang="nl">koi getekend in ascii</span></footer>
+  </section>
+</main>
+</body>
+</html>
